@@ -64,5 +64,8 @@ RUN touch /home/${user}/.Xauthority
 # Set SUID and SGID for docker binary so it can communicate with mapped socket its uid:gid we can not control. Alternative
 # approach used for this is adding ath-user to the group of /var/run/docker.sock but that require root permission we do not
 # have in ENTRYPOINT as the container is started as ath-user.
+COPY --chown=ath-user:jenkins run.sh $HOME
+COPY --chown=ath-user:jenkins vnc.sh $HOME
+RUN chmod a+x $HOME/vnc.sh && chmod a+x $HOME/run.sh
 USER root
 RUN chmod ug+s "$(which docker)"
