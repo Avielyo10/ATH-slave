@@ -7,20 +7,34 @@ RUN apt-get clean && \
         git \
         imagemagick \
         iptables \
-        firefox-esr \
         maven \
         unzip \
-        vnc4server
+        vnc4server \
+        bzip2 \
+        fluxbox \
+        groovy \
+        gtk2.0 \
+        libgtk-3-dev \
+        tar \
+        yum-utils \
+        thin-provisioning-tools \
+        lvm2 \
+        apt-transport-https \
+        ca-certificates \
+        software-properties-common 
 
 # All we need is a statically linked client library - no need to install daemon deps: https://get.docker.com/builds/
 RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.03.2-ce.tgz && \
     tar --strip-components=1 -xvzf docker-17.03.2-ce.tgz -C /usr/local/bin
 ENV SHARED_DOCKER_SERVICE true
 
+# Firefox 45.9.0 - esr
+ADD https://ftp.mozilla.org/pub/firefox/releases/45.9.0esr/linux-x86_64/en-US/firefox-45.9.0esr.tar.bz2 /tmp
+
 # Allow injecting uid and git to match directory ownership
 ARG user=ath-user
 ARG group=jenkins
-ARG uid=10000
+ARG uid=10001
 ARG gid=10000
 
 ENV uid $uid
@@ -66,6 +80,7 @@ RUN touch /home/${user}/.Xauthority
 # have in ENTRYPOINT as the container is started as ath-user.
 COPY --chown=ath-user:jenkins run.sh $HOME
 COPY --chown=ath-user:jenkins vnc.sh $HOME
+COPY agent.jar ${AGENT_WORKDIR}
 RUN chmod a+x $HOME/vnc.sh && chmod a+x $HOME/run.sh
 USER root
 RUN chmod ug+s "$(which docker)"
