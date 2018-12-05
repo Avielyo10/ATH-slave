@@ -1,11 +1,12 @@
-FROM openjdk:8-jdk
+FROM centos:latest
 
-RUN apt-get clean && \
-    apt-get -y update && \
-    apt-get install -y \
+RUN yum clean all && \
+    yum -y update && \
+    yum install -y \
+        which \
         curl \
         git \
-        imagemagick \
+        ImageMagick \
         iptables \
         maven \
         unzip \
@@ -13,15 +14,17 @@ RUN apt-get clean && \
         bzip2 \
         fluxbox \
         groovy \
-        gtk2.0 \
-        libgtk-3-dev \
+        gtk2 \
+        gtk3 \
         tar \
         yum-utils \
-        thin-provisioning-tools \
+        device-mapper-persistent-data \
         lvm2 \
         apt-transport-https \
         ca-certificates \
-        software-properties-common 
+        software-properties-common \
+        device-mapper-persistent-data \
+        tigervnc-server
 
 # All we need is a statically linked client library - no need to install daemon deps: https://get.docker.com/builds/
 RUN curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-17.03.2-ce.tgz && \
@@ -46,8 +49,9 @@ LABEL Description="This is a base image, which provides the Jenkins agent execut
 
 EXPOSE 5942
 
+SHELL ["/bin/bash", "-c"]
 # So it is owned by root and has the permissions vncserver seems to require:
-RUN mkdir /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix/
+RUN chmod 1777 /tmp/.X11-unix/
 
 ARG VERSION=3.27
 ARG AGENT_WORKDIR=/home/${user}/agent
