@@ -146,8 +146,7 @@ USER root
 RUN mv configure-agent configure-slave generate_container_user run-jnlp-client /usr/local/bin/ && \
     chmod ug+s "$(which docker)"
 
-RUN eval $(./vnc.sh) && \
-./run.sh firefox latest -Dmaven.test.failure.ignore=true -DforkCount=1 -B -Dtest=...
+RUN eval $(./vnc.sh)
 
 # Run the Jenkins JNLP client
 ENTRYPOINT ["/usr/local/bin/run-jnlp-client"]
