@@ -54,19 +54,7 @@ SHELL ["/bin/bash", "-c"]
 # So it is owned by root and has the permissions vncserver seems to require:
 RUN chmod 1777 /tmp/.X11-unix/
 
-ARG VERSION=3.27
-ARG AGENT_WORKDIR=/home/${user}/agent
-
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar \
-  && chmod 755 /usr/share/jenkins \
-  && chmod 644 /usr/share/jenkins/slave.jar
-
 USER ${user}
-ENV AGENT_WORKDIR=${AGENT_WORKDIR}
-RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
-
-VOLUME /home/${user}/.jenkins
-VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/${user}
 
 # TODO seems this can be picked up from the host, which is unwanted:
