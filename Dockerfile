@@ -38,15 +38,14 @@ RUN tar xvjf /tmp/firefox-45.9.0esr.tar.bz2
 # Allow injecting uid and git to match directory ownership
 ARG user=ath-user
 ARG group=jenkins
-ARG uid=1001
+ARG uid=1000
 ARG gid=1000
 
 ENV uid $uid
 ENV gid $gid
 ENV HOME /home/${user}
 RUN groupadd -g ${gid} ${group}
-RUN useradd -c "Jenkins user" -d $HOME -u ${uid} -g ${gid} -G 0 -m ${user}
-LABEL Description="This is a base image, which provides the Jenkins agent executable (slave.jar)" Vendor="Jenkins project" Version="3.27"
+RUN useradd -c "ATH-jenkins user" -d $HOME -u ${uid} -g ${gid} -G 0 -m ${user}
 
 EXPOSE 50000
 
